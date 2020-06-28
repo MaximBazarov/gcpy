@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "gcpy"
+version = "0.1.0"
+description = "Google Cloud Platform (GCP) Python helpers for functions, queues, collections and more"
+authors = ["Maxim Bazarov <bazaroffma@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+"google.cloud" = "^0.34.0"
+"google.api_core" = "^1.21.0"
+
+[tool.poetry.dev-dependencies]
+unittest = "^0.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
