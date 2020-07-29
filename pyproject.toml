@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "gcpy"
-version = "0.1.3"
+version = "0.1.4"
 description = "Google Cloud Platform (GCP) Python helpers for functions, queues, collections and more"
 authors = ["Maxim Bazarov <bazaroffma@gmail.com>"]
 license = "MIT"
