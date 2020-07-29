@@ -1,7 +1,7 @@
 from enum import Enum
 
-from gcpy.CloudFunction import CloudFunction
-from gcpy.FirestoreCollection import FirestoreCollection
+from gcpy.functions.CloudFunction import CloudFunction
+from gcpy.firestore.Collection import FirestoreCollection
 from gcpy.utils import answer
 
 
@@ -27,20 +27,27 @@ class FirestoreTrigger(Enum):
 
 
 class FirestoreTriggerFunction(CloudFunction):
-    name: str = None
-    collection_to_listen: FirestoreCollection = None
-    trigger: FirestoreTrigger = None
-    project_name: str = None
-
-    @property
-    def cli_trigger_string(self):
-        return '--trigger-event providers/cloud.firestore/eventTypes/document.{} ' \
-               '--trigger-resource "projects/{}/databases/(default)/documents/{}/{{document}}" ' \
-            .format(self.project_name, self.trigger.value, self.collection_to_listen.name)
+    name: str
+    collection_to_listen: FirestoreCollection.__class__
+    trigger: FirestoreTrigger.__class__
 
     def handle(self, data, context):
+        """
+        Google Firestore Trigger cloud function.
+
+        Parses the data to `Change`, that is old: Document and new: Document,
+        then calls `handle_change(doc_id: old: new: trigger:)`.
+
+        `Document` is to be overridden in ancestors.
+
+        Args:
+            data: data of changes
+            context: context of changes
+
+        """
         try:
-            change = self.collection_to_listen.changes_from_event(data)
+            print('FirestoreTriggerFunction:handle(self, data, context): {} '.format(data))
+            change = self.collection_to_listen.document_type.changes(data)
             trigger = FirestoreTrigger.noTrigger
             event_type = context.event_type.split('.')[-1]
             doc_id = context.resource.split('/')[-1]
@@ -53,16 +60,15 @@ class FirestoreTriggerFunction(CloudFunction):
 
     def handle_change(self, doc_id, old, new, trigger: FirestoreTrigger):
         """
-
         To override in ancestors
         Will be called when change occurs
 
-        StockExchangeDocument is a class that defined in the ancestor FirestoreCollection
+        `Document` is a class that defined in the ancestor FirestoreCollection
 
         :param doc_id: Document id from resource
         :param trigger: FirestoreTrigger
-        :param old: old StockExchangeDocument
-        :param new: new StockExchangeDocument
+        :param old: old `Document`
+        :param new: new `Document`
         :return:
         """
         print('Unhandled change triggered by {} from old: {} to new: {}'.format(trigger, old, new))

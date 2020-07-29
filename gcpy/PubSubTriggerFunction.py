@@ -1,6 +1,6 @@
 import base64
 
-from gcpy.CloudFunction import CloudFunction
+from gcpy.functions.CloudFunction import CloudFunction
 from gcpy.utils.binary import str_to_dict
 
 
